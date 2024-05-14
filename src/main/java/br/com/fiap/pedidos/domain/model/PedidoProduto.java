@@ -1,5 +1,6 @@
 package br.com.fiap.pedidos.domain.model;
 
+import br.com.fiap.pedidos.domain.model.embedded.PedidoProdutoId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,15 +14,19 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Produto {
+public class PedidoProduto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private PedidoProdutoId id;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @MapsId("idPedido")
+    @JoinColumn(name = "id_pedido")
+    private Pedido pedido;
+
+    private Integer quantidade;
+
     private BigDecimal preco;
 
-    @Column(nullable = false)
-    private Integer quantidade;
 }
+

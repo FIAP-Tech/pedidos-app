@@ -42,14 +42,21 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
 
-    @Column(nullable = false)
-    @OneToMany
-    private List<Produto> listaDeProdutos;
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PedidoProduto> pedidoProdutos;
 
     @PrePersist
     protected void onCreate() {
         this.dataPedido = LocalDateTime.now();
         this.status = Status.NOVO;
+        this.getPedidoProdutos().forEach(pedidoProduto -> pedidoProduto.setPedido(this));
+        calcularTotalPedido();
+    }
+
+    private void calcularTotalPedido() {
+        this.setTotalPedido(this.getPedidoProdutos().stream()
+                .map(pedidoProduto -> pedidoProduto.getPreco().multiply(BigDecimal.valueOf(pedidoProduto.getQuantidade())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
 }

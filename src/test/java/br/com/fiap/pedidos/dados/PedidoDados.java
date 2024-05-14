@@ -1,24 +1,24 @@
 package br.com.fiap.pedidos.dados;
 
 import br.com.fiap.pedidos.api.model.PedidoDto;
+import br.com.fiap.pedidos.api.model.PedidoProdutoDto;
 import br.com.fiap.pedidos.domain.model.Pedido;
-import br.com.fiap.pedidos.domain.model.Produto;
+import br.com.fiap.pedidos.domain.model.PedidoProduto;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PedidoDados {
 
-    List<Produto> produtos = Arrays.asList(new Produto(1L, BigDecimal.valueOf(13.00), 10),
-                                            new Produto(2L, BigDecimal.valueOf(15.00), 5),
-                                            new Produto(3L, BigDecimal.valueOf(25.00), 1));
+    List<PedidoProduto> pedidoProdutos = new ArrayList<>();
+    List<PedidoProdutoDto> pedidoProdutosDto = new ArrayList<>();
+
 
     public Pedido criarPedido1(){
         return Pedido.builder()
                 .idPedido(1L)
                 .idCliente(1L)
-                .listaDeProdutos(produtos)
+                .pedidoProdutos(pedidoProdutos)
                 .build();
     }
 
@@ -26,7 +26,7 @@ public class PedidoDados {
         return Pedido.builder()
                 .idPedido(1L)
                 .idCliente(1L)
-                .listaDeProdutos(produtos)
+                .pedidoProdutos(pedidoProdutos)
                 .build();
     }
 
@@ -34,7 +34,7 @@ public class PedidoDados {
         return PedidoDto.builder()
                 .idPedido(1L)
                 .idCliente(1L)
-                .listaDeProdutos(produtos)
+                .pedidoProdutos(pedidoProdutosDto)
                 .build();
     }
 
@@ -42,7 +42,7 @@ public class PedidoDados {
         return PedidoDto.builder()
                 .idPedido(1L)
                 .idCliente(1L)
-                .listaDeProdutos(produtos)
+                .pedidoProdutos(pedidoProdutosDto)
                 .build();
     }
 }

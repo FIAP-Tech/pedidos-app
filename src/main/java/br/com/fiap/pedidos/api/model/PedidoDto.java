@@ -2,7 +2,6 @@ package br.com.fiap.pedidos.api.model;
 
 import br.com.fiap.pedidos.domain.enums.FormaPagamento;
 import br.com.fiap.pedidos.domain.enums.Status;
-import br.com.fiap.pedidos.domain.model.Produto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -35,5 +34,5 @@ public class PedidoDto {
     @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
 
-    private List<Produto> listaDeProdutos;
+    private List<PedidoProdutoDto> pedidoProdutos;
 }

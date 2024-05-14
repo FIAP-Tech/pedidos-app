@@ -4,13 +4,11 @@ import br.com.fiap.pedidos.api.model.PedidoDto;
 import br.com.fiap.pedidos.config.MessageConfig;
 import br.com.fiap.pedidos.domain.exception.PedidoNaoEncontradoException;
 import br.com.fiap.pedidos.domain.model.Pedido;
-import br.com.fiap.pedidos.domain.model.Produto;
 import br.com.fiap.pedidos.domain.repository.PedidoRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -37,9 +35,6 @@ public class PedidoService {
     public PedidoDto add(PedidoDto pedidoDto) {
         var pedido = modelMapper.map(pedidoDto, Pedido.class);
 
-        pedido.setTotalPedido(pedido.getListaDeProdutos().stream()
-                .map(Produto::getPreco)
-                .reduce(BigDecimal.ZERO, BigDecimal::add));
         pedido = pedidoRepository.save(pedido);
 
         return modelMapper.map(pedido, PedidoDto.class);

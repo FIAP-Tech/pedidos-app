@@ -2,6 +2,8 @@ package br.com.fiap.pedidos.domain.model;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class MensagemEmail {
 
@@ -11,17 +13,24 @@ public class MensagemEmail {
 
     private String corpoEmail;
 
-    public void setCorpoEmail(String nomeCliente){
-        this.corpoEmail = criarCorpoEmailBoasVindas(nomeCliente);
-    }
+    public String criarCorpoEmailPedido(Pedido pedido, String nomeCliente) {
+        StringBuilder produtosHtml = new StringBuilder();
 
-    private String criarCorpoEmailBoasVindas(String nomeCliente) {
+        for (PedidoProduto pedidoProduto : pedido.getPedidoProdutos()) {
+            produtosHtml.append("<tr>")
+                    .append("<td>").append(pedidoProduto.getId().getIdProduto()).append("</td>")
+                    .append("<td>").append(pedidoProduto.getPreco()).append("</td>")
+                    .append("<td>").append(pedidoProduto.getQuantidade()).append("</td>")
+                    .append("<td>").append(pedidoProduto.getPreco().multiply(BigDecimal.valueOf(pedidoProduto.getQuantidade()))).append("</td>")
+                    .append("</tr>");
+        }
+
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"pt-BR\">\n" +
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                "    <title>Email de Boas-Vindas ao FIAP E-commerce</title>\n" +
+                "    <title>Pedido Efetuado com Sucesso - FIAP E-commerce</title>\n" +
                 "    <style>\n" +
                 "        body {\n" +
                 "            font-family: 'Arial', sans-serif;\n" +
@@ -51,33 +60,45 @@ public class MensagemEmail {
                 "            font-size: 16px;\n" +
                 "            line-height: 1.5;\n" +
                 "        }\n" +
-                "        ul {\n" +
-                "            margin-bottom: 20px;\n" +
-                "            padding-left: 20px;\n" +
-                "        }\n" +
-                "        li {\n" +
-                "            font-size: 16px;\n" +
-                "            line-height: 1.5;\n" +
-                "        }\n" +
                 "        .footer {\n" +
                 "            margin-top: 20px;\n" +
                 "            font-size: 14px;\n" +
                 "            color: #888;\n" +
                 "        }\n" +
+                "        table {\n" +
+                "            width: 100%;\n" +
+                "            border-collapse: collapse;\n" +
+                "            margin-bottom: 20px;\n" +
+                "        }\n" +
+                "        th, td {\n" +
+                "            border: 1px solid #ddd;\n" +
+                "            padding: 8px;\n" +
+                "            text-align: left;\n" +
+                "        }\n" +
+                "        th {\n" +
+                "            background-color: #f2f2f2;\n" +
+                "        }\n" +
                 "    </style>\n" +
                 "</head>\n" +
                 "<body>\n" +
                 "    <div class=\"container\">\n" +
-                "        <h1>Bem-vindo ao FIAP E-commerce!</h1>\n" +
-                "        <p>Oi " + nomeCliente + ",</p>\n" +
-                "        <p>Seja bem-vindo ao FIAP E-commerce! Agradecemos por se cadastrar em nossa plataforma. Estamos muito felizes em tê-lo como nosso cliente.</p>\n" +
-                "        <p>Aqui estão alguns dos benefícios que você pode aproveitar:</p>\n" +
-                "        <ul>\n" +
-                "            <li>Facilidade de navegação e busca de produtos.</li>\n" +
-                "            <li>Produtos de alta qualidade e preços competitivos.</li>\n" +
-                "            <li>Atendimento ao cliente excepcional.</li>\n" +
-                "        </ul>\n" +
-                "        <p>Seja bem-vindo e aproveite ao máximo a sua experiência de compra conosco!</p>\n" +
+                "        <h1>Pedido Efetuado com Sucesso!</h1>\n" +
+                "        <p>Olá " + nomeCliente + ",</p>\n" +
+                "        <p>Seu pedido foi efetuado com sucesso! Abaixo estão os detalhes do seu pedido:</p>\n" +
+                "        <table>\n" +
+                "            <tr>\n" +
+                "                <th>Produto ID</th>\n" +
+                "                <th>Preço</th>\n" +
+                "                <th>Quantidade</th>\n" +
+                "                <th>Total</th>\n" +
+                "            </tr>\n" +
+                                produtosHtml +
+                "            <tr>\n" +
+                "                <td colspan=\"3\" style=\"text-align: right;\"><strong>Total do Pedido:</strong></td>\n" +
+                "                <td><strong>" + pedido.getTotalPedido() + "</strong></td>\n" +
+                "            </tr>\n" +
+                "        </table>\n" +
+                "        <p>Agradecemos por comprar conosco!</p>\n" +
                 "        <div class=\"footer\">\n" +
                 "            <p>Atenciosamente,<br>Equipe FIAP E-commerce</p>\n" +
                 "        </div>\n" +
@@ -85,4 +106,5 @@ public class MensagemEmail {
                 "</body>\n" +
                 "</html>";
     }
+
 }

@@ -31,7 +31,7 @@ public class PedidoService {
     private void enviarEmailPedidoRecebido(Pedido pedido, ClienteDto cliente) {
         MensagemEmail mensagemEmail = new MensagemEmail();
         mensagemEmail.setEmailDestinatario(cliente.getEmail());
-        mensagemEmail.setAssunto(cliente.getNome() + ", Seja Bem-vindo ao FIAP e-commerce");
+        mensagemEmail.setAssunto("Pedido recebido com Sucesso");
         mensagemEmail.criarCorpoEmailPedido(pedido, cliente.getNome());
 
         sqsService.enviarMensagem(mensagemEmail);

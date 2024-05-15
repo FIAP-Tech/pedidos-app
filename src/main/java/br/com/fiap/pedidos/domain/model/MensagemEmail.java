@@ -13,19 +13,19 @@ public class MensagemEmail {
 
     private String corpoEmail;
 
-    public String criarCorpoEmailPedido(Pedido pedido, String nomeCliente) {
+    public void criarCorpoEmailPedido(Pedido pedido, String nomeCliente) {
         StringBuilder produtosHtml = new StringBuilder();
 
         for (PedidoProduto pedidoProduto : pedido.getPedidoProdutos()) {
             produtosHtml.append("<tr>")
                     .append("<td>").append(pedidoProduto.getId().getIdProduto()).append("</td>")
-                    .append("<td>").append(pedidoProduto.getPreco()).append("</td>")
+                    .append("<td>R$ ").append(pedidoProduto.getPreco()).append("</td>")
                     .append("<td>").append(pedidoProduto.getQuantidade()).append("</td>")
-                    .append("<td>").append(pedidoProduto.getPreco().multiply(BigDecimal.valueOf(pedidoProduto.getQuantidade()))).append("</td>")
+                    .append("<td>R$ ").append(pedidoProduto.getPreco().multiply(BigDecimal.valueOf(pedidoProduto.getQuantidade()))).append("</td>")
                     .append("</tr>");
         }
 
-        return "<!DOCTYPE html>\n" +
+        this.setCorpoEmail("<!DOCTYPE html>\n" +
                 "<html lang=\"pt-BR\">\n" +
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
@@ -95,7 +95,7 @@ public class MensagemEmail {
                                 produtosHtml +
                 "            <tr>\n" +
                 "                <td colspan=\"3\" style=\"text-align: right;\"><strong>Total do Pedido:</strong></td>\n" +
-                "                <td><strong>" + pedido.getTotalPedido() + "</strong></td>\n" +
+                "                <td><strong>R$ " + pedido.getTotalPedido() + "</strong></td>\n" +
                 "            </tr>\n" +
                 "        </table>\n" +
                 "        <p>Agradecemos por comprar conosco!</p>\n" +
@@ -104,7 +104,7 @@ public class MensagemEmail {
                 "        </div>\n" +
                 "    </div>\n" +
                 "</body>\n" +
-                "</html>";
+                "</html>");
     }
 
 }

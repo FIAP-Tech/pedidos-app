@@ -1,9 +1,11 @@
 package br.com.fiap.pedidos.domain.service;
 
+import br.com.fiap.pedidos.api.exceptionhandler.ClienteNaoEncontradoException;
 import br.com.fiap.pedidos.api.model.ClienteDto;
 import br.com.fiap.pedidos.api.model.PedidoDto;
 import br.com.fiap.pedidos.api.model.PedidoProcessaDto;
 import br.com.fiap.pedidos.config.MessageConfig;
+import br.com.fiap.pedidos.domain.enums.Status;
 import br.com.fiap.pedidos.domain.exception.PedidoNaoEncontradoException;
 import br.com.fiap.pedidos.api.model.MensagemEmailDto;
 import br.com.fiap.pedidos.domain.model.Pedido;
@@ -46,15 +48,25 @@ public class PedidoService {
         sqsService.enviarMensagemFilaPedidos(pedidoProcessaDto);
     }
 
+    private void atualizarStatus(Pedido pedido) {
+        pedido.setStatus(Status.VERIFICANDO_PAGAMENTO);
+        pedidoRepository.save(pedido);
+    }
+
     private void processarPedido(Pedido pedido, ClienteDto cliente) {
         enviarEmailPedidoRecebido(pedido, cliente);
         enviarPedidoParaProcessamento(pedido, cliente);
+        atualizarStatus(pedido);
     }
 
     public PedidoDto add(PedidoDto pedidoDto) {
         var pedido = modelMapper.map(pedidoDto, Pedido.class);
 
         ClienteDto clienteDto = clienteService.getClienteById(pedido.getIdCliente());
+
+        if(clienteDto == null) {
+            throw new ClienteNaoEncontradoException(messageConfig.getClienteNaoEncontrado());
+        }
 
         pedido = pedidoRepository.save(pedido);
         processarPedido(pedido, clienteDto);

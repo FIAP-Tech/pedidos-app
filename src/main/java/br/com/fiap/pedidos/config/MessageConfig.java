@@ -11,4 +11,7 @@ public class MessageConfig {
     @Value("${messages.error.pedido-nao-encontrado}")
     private String pedidoNaoEncontrado;
 
+    @Value("${messages.error.cliente-nao-encontrado}")
+    private String clienteNaoEncontrado;
+
 }

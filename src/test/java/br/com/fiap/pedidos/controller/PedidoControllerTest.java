@@ -2,7 +2,6 @@ package br.com.fiap.pedidos.controller;
 
 import br.com.fiap.pedidos.api.controller.PedidoController;
 import br.com.fiap.pedidos.api.model.PedidoDto;
-import br.com.fiap.pedidos.dados.PedidoDados;
 import br.com.fiap.pedidos.domain.service.PedidoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PedidoController.class)
 @AutoConfigureMockMvc
-class PedidoControllerTest extends PedidoDados {
+class PedidoControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,7 +35,7 @@ class PedidoControllerTest extends PedidoDados {
 
     @Test
     void deveBuscarTodosPedidosComSucesso() throws Exception {
-        List<PedidoDto> pedidos = Arrays.asList(criarPedidoDto1(), criarPedidoDto2());
+        List<PedidoDto> pedidos = Arrays.asList(new PedidoDto(), new PedidoDto());
 
         when(pedidoService.findAll()).thenReturn(pedidos);
 
@@ -50,7 +49,7 @@ class PedidoControllerTest extends PedidoDados {
     @Test
     void deveBuscarPedidoPorIdComSucesso() throws Exception {
         var id = 1L;
-        var pedidoDto = criarPedidoDto1();
+        var pedidoDto = new PedidoDto();
 
         when(pedidoService.getPedidoById(id)).thenReturn(pedidoDto);
 
@@ -63,7 +62,7 @@ class PedidoControllerTest extends PedidoDados {
 
     @Test
     void deveAdicionarPedidoComSucesso() throws Exception {
-        var pedidoDto = criarPedidoDto1();
+        var pedidoDto = new PedidoDto();
 
         doNothing().when(pedidoService).add(pedidoDto);
 

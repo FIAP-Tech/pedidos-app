@@ -27,6 +27,18 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(status).body(this.errorMessage);
     }
 
+    @ExceptionHandler(ClienteNaoEncontradoException.class)
+    public ResponseEntity<ErrorMessage> clienteNaoEncontrado(ClienteNaoEncontradoException e, HttpServletRequest request){
+        var status = HttpStatus.NOT_FOUND;
+
+        errorMessage.setTimestamp(LocalDateTime.now());
+        errorMessage.setStatus(status.value());
+        errorMessage.setMessage(e.getMessage());
+        errorMessage.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(status).body(this.errorMessage);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorMessage> illegalArgument(IllegalArgumentException e, HttpServletRequest request){
         var status = HttpStatus.BAD_REQUEST;

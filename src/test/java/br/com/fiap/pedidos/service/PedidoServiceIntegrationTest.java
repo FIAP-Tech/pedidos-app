@@ -1,7 +1,6 @@
 package br.com.fiap.pedidos.service;
 
 import br.com.fiap.pedidos.api.model.PedidoDto;
-import br.com.fiap.pedidos.dados.PedidoDados;
 import br.com.fiap.pedidos.domain.exception.PedidoNaoEncontradoException;
 import br.com.fiap.pedidos.domain.repository.PedidoRepository;
 import br.com.fiap.pedidos.domain.service.PedidoService;
@@ -16,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-public class PedidoServiceIntegrationTest extends PedidoDados {
+public class PedidoServiceIntegrationTest {
 
     @Autowired
     private PedidoService pedidoService;
@@ -29,7 +28,7 @@ public class PedidoServiceIntegrationTest extends PedidoDados {
 
         @Test
         void deveAdicionarPedido_ComSucesso() {
-            var pedidoDto = criarPedidoDto1();
+            var pedidoDto = new PedidoDto();
             pedidoDto.setIdPedido(null);
 
             pedidoService.add(pedidoDto);

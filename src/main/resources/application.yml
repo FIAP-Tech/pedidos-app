@@ -42,3 +42,4 @@ aws:
 messages:
     error:
         pedido-nao-encontrado: "Pedido não foi encontrado"
+        cliente-nao-encontrado: "Cliente não foi encontrado"

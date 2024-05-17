@@ -20,7 +20,7 @@ public class MensagemEmailDto {
 
         for (PedidoProduto pedidoProduto : pedido.getPedidoProdutos()) {
             produtosHtml.append("<tr>")
-                    .append("<td>").append(pedidoProduto.getId().getIdProduto()).append("</td>")
+                    .append("<td>").append(pedidoProduto.getDescricao()).append("</td>")
                     .append("<td>R$ ").append(pedidoProduto.getPreco()).append("</td>")
                     .append("<td>").append(pedidoProduto.getQuantidade()).append("</td>")
                     .append("<td>R$ ").append(pedidoProduto.getPreco().multiply(BigDecimal.valueOf(pedidoProduto.getQuantidade()))).append("</td>")
@@ -89,7 +89,7 @@ public class MensagemEmailDto {
                 "        <p>Seu pedido foi efetuado com sucesso! Abaixo estão os detalhes do seu pedido:</p>\n" +
                 "        <table>\n" +
                 "            <tr>\n" +
-                "                <th>Produto ID</th>\n" +
+                "                <th>Produto</th>\n" +
                 "                <th>Preço</th>\n" +
                 "                <th>Quantidade</th>\n" +
                 "                <th>Total</th>\n" +

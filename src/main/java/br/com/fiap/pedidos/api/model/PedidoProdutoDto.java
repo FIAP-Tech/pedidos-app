@@ -9,6 +9,8 @@ public class PedidoProdutoDto {
 
     private Long idProduto;
 
+    private String descricao;
+
     private Integer quantidade;
 
     private BigDecimal preco;

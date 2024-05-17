@@ -24,6 +24,8 @@ public class PedidoProduto {
     @JoinColumn(name = "id_pedido")
     private Pedido pedido;
 
+    private String descricao;
+
     private Integer quantidade;
 
     private BigDecimal preco;

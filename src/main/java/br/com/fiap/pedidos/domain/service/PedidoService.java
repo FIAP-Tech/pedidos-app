@@ -2,9 +2,10 @@ package br.com.fiap.pedidos.domain.service;
 
 import br.com.fiap.pedidos.api.model.ClienteDto;
 import br.com.fiap.pedidos.api.model.PedidoDto;
+import br.com.fiap.pedidos.api.model.PedidoProcessaDto;
 import br.com.fiap.pedidos.config.MessageConfig;
 import br.com.fiap.pedidos.domain.exception.PedidoNaoEncontradoException;
-import br.com.fiap.pedidos.domain.model.MensagemEmail;
+import br.com.fiap.pedidos.api.model.MensagemEmailDto;
 import br.com.fiap.pedidos.domain.model.Pedido;
 import br.com.fiap.pedidos.domain.repository.PedidoRepository;
 import lombok.AllArgsConstructor;
@@ -29,12 +30,25 @@ public class PedidoService {
     private final ClienteService clienteService;
 
     private void enviarEmailPedidoRecebido(Pedido pedido, ClienteDto cliente) {
-        MensagemEmail mensagemEmail = new MensagemEmail();
-        mensagemEmail.setEmailDestinatario(cliente.getEmail());
-        mensagemEmail.setAssunto("Pedido recebido com Sucesso");
-        mensagemEmail.criarCorpoEmailPedido(pedido, cliente.getNome());
+        var mensagemEmailDto = new MensagemEmailDto();
+        mensagemEmailDto.setEmailDestinatario(cliente.getEmail());
+        mensagemEmailDto.setAssunto("Pedido recebido com Sucesso");
+        mensagemEmailDto.criarCorpoEmailPedido(pedido, cliente.getNome());
 
-        sqsService.enviarMensagem(mensagemEmail);
+        sqsService.enviarMensagemFilaEmail(mensagemEmailDto);
+    }
+
+    private void enviarPedidoParaProcessamento(Pedido pedido, ClienteDto cliente) {
+        var pedidoProcessaDto = new PedidoProcessaDto();
+        modelMapper.map(pedido, pedidoProcessaDto);
+        modelMapper.map(cliente, pedidoProcessaDto);
+
+        sqsService.enviarMensagemFilaPedidos(pedidoProcessaDto);
+    }
+
+    private void processarPedido(Pedido pedido, ClienteDto cliente) {
+        enviarEmailPedidoRecebido(pedido, cliente);
+        enviarPedidoParaProcessamento(pedido, cliente);
     }
 
     public PedidoDto add(PedidoDto pedidoDto) {
@@ -43,7 +57,7 @@ public class PedidoService {
         ClienteDto clienteDto = clienteService.getClienteById(pedido.getIdCliente());
 
         pedido = pedidoRepository.save(pedido);
-        enviarEmailPedidoRecebido(pedido, clienteDto);
+        processarPedido(pedido, clienteDto);
 
         return modelMapper.map(pedido, PedidoDto.class);
     }

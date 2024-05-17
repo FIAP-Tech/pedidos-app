@@ -1,11 +1,13 @@
-package br.com.fiap.pedidos.domain.model;
+package br.com.fiap.pedidos.api.model;
 
+import br.com.fiap.pedidos.domain.model.Pedido;
+import br.com.fiap.pedidos.domain.model.PedidoProduto;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class MensagemEmail {
+public class MensagemEmailDto {
 
     private String emailDestinatario;
 

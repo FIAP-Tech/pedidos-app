@@ -21,6 +21,14 @@ spring:
         generate-ddl: false  # Generate DDL from entity models (optional, for schema creation)
         open-in-view: false  # Disable Open Session in View (OSIV) to prevent lazy loading issues
 
+api:
+    cliente:
+        endpoint: ${API_CLIENTE_ENDPOINT:http://localhost:8081/api/clientes}
+        retry:
+            max-tentativas: 3
+            duracao: 5
+
+
 aws:
     region: us-east-1
     credentials:
@@ -29,7 +37,7 @@ aws:
     sqs:
         endpoint:
             envia-emails: ${AWS_SQS_ENDPOINT_ENVIA_EMAILS:http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/envia-emails}
-            processa_pedidos: ${AWS_SQS_ENDPOINT_PROCESSA_PEDIDOS:http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/processa_pedidos}
+            processa-pedidos: ${AWS_SQS_ENDPOINT_PROCESSA_PEDIDOS:http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/processa_pedidos}
 
 messages:
     error:

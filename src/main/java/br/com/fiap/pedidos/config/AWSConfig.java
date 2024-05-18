@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AWSConfig {
 
+    @Value("${aws.region}")
+    private String awsRegion;
+
     @Value("${aws.credentials.client-id}")
     private String awsClientId;
 
@@ -26,6 +29,7 @@ public class AWSConfig {
     public AmazonSQS amazonSQS() {
         return AmazonSQSClientBuilder
                 .standard()
+                .withRegion(awsRegion)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials()))
                 .build();
     }

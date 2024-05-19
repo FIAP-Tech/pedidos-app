@@ -35,7 +35,7 @@ public class PedidoController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<String> updateOrderStatus(@PathVariable Long id, @RequestParam Status status) {
+    public ResponseEntity<String> atualizaStatusPedido(@PathVariable Long id, @RequestParam Status status) {
         return service.atualizaStatusPedido(id, status)
                 .map(order -> ResponseEntity.ok("Pedido atualizado para o status: " + status))
                 .orElseGet(() -> ResponseEntity.notFound().build());

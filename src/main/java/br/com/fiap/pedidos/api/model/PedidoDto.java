@@ -34,5 +34,7 @@ public class PedidoDto {
     @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
 
+    private String validadeFormaPagamentoCartao;
+
     private List<PedidoProdutoDto> pedidoProdutos;
 }

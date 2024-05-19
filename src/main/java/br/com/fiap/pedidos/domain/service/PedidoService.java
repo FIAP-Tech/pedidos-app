@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -90,5 +91,16 @@ public class PedidoService {
         return pedidoRepository.findAll().stream()
                 .map(pedido -> modelMapper.map(pedido, PedidoDto.class))
                 .toList();
+    }
+
+    public Optional<Pedido> atualizaStatusPedido(Long orderId, Status novoStatus) {
+        Optional<Pedido> pedidoOptional = pedidoRepository.findById(orderId);
+        if (pedidoOptional.isPresent()) {
+            Pedido pedido = pedidoOptional.get();
+            pedido.setStatus(novoStatus);
+            pedidoRepository.save(pedido);
+            return Optional.of(pedido);
+        }
+        return Optional.empty();
     }
 }

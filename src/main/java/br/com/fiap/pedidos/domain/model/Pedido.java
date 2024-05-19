@@ -42,6 +42,8 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
 
+    private String validadeFormaPagamentoCartao;
+
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PedidoProduto> pedidoProdutos;
 

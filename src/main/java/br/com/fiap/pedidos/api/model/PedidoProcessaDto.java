@@ -28,5 +28,7 @@ public class PedidoProcessaDto {
 
     private FormaPagamento formaPagamento;
 
+    private String validadeFormaPagamentoCartao;
+
     private List<PedidoProdutoDto> pedidoProdutos;
 }

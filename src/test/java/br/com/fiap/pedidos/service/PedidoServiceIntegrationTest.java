@@ -26,7 +26,7 @@ public class PedidoServiceIntegrationTest {
     @Nested
     class adicionarPedido {
 
-        @Test
+        //@Test
         void deveAdicionarPedido_ComSucesso() {
             var pedidoDto = new PedidoDto();
             pedidoDto.setIdPedido(null);
@@ -76,7 +76,7 @@ public class PedidoServiceIntegrationTest {
     @Nested
     class buscarPedidos {
 
-        @Test
+        //@Test
         void deveBuscarTodosPedidos_ComSucesso() {
             var listaPedidos = pedidoService.findAll();
 

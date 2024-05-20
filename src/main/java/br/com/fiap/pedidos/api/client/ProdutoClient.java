@@ -40,4 +40,17 @@ public class ProdutoClient {
                 .onErrorResume(WebClientResponseException.NotFound.class, ex -> Mono.just(Optional.empty()))
                 .onErrorResume(WebClientResponseException.class, ex -> Mono.error(new RuntimeException("Erro ao se comunicar com a API de produtos: " + ex.getMessage())));
     }
+
+    public Mono<Optional<String>> atualizarEstoqueProduto(Long produtoId, Integer quantidadeVendida) {
+        return this.webClient.post()
+                .uri("/{id}/atualizar-estoque?quantidadeVendida={quantidade}", produtoId, quantidadeVendida)
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(Optional::of)
+                .retryWhen(Retry.fixedDelay(prop.getMaxTentativas(), Duration.ofSeconds(prop.getDuracao()))
+                        .filter(WebClientResponseException.class::isInstance)
+                        .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> retrySignal.failure()))
+                .onErrorResume(WebClientResponseException.NotFound.class, ex -> Mono.just(Optional.empty()))
+                .onErrorResume(WebClientResponseException.class, ex -> Mono.error(new RuntimeException("Erro ao se comunicar com a API de produtos: " + ex.getMessage())));
+    }
 }

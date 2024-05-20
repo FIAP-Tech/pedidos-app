@@ -55,7 +55,13 @@ public class PedidoService {
         pedidoRepository.save(pedido);
     }
 
+    private void atualizarEstoqueProduto(Pedido pedido) {
+        pedido.getPedidoProdutos()
+                .forEach(pedidoProduto -> produtoService.atualizarEstoqueProduto(pedidoProduto.getId().getIdProduto(), pedidoProduto.getQuantidade()).subscribe());
+    }
+
     private void processarPedido(Pedido pedido, ClienteDto cliente) {
+        atualizarEstoqueProduto(pedido);
         enviarEmailPedidoRecebido(pedido, cliente);
         enviarPedidoParaProcessamento(pedido, cliente);
         atualizarStatus(pedido);

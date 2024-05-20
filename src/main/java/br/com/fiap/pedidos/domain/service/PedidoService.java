@@ -16,10 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
 public class PedidoService {
+
+
+    private static final Logger logger = Logger.getLogger(PedidoService.class.getName());
+
 
     private final PedidoRepository pedidoRepository;
 
@@ -79,6 +84,7 @@ public class PedidoService {
         pedido.getPedidoProdutos()
                 .forEach(pedidoProduto -> {
                     Optional<ProdutoDto> produtoDto = produtoService.getProdutoById(pedidoProduto.getId().getIdProduto());
+                    logger.info("teste ricardo log: " + produtoDto);
                     if(produtoDto.isPresent()){
                         ProdutoDto produto = produtoDto.get();
                         if(produto.getEstoque() >= pedidoProduto.getQuantidade()) {

@@ -1,13 +1,12 @@
 package br.com.fiap.pedidos.domain.service;
 
 import br.com.fiap.pedidos.api.exceptionhandler.ClienteNaoEncontradoException;
-import br.com.fiap.pedidos.api.model.ClienteDto;
-import br.com.fiap.pedidos.api.model.PedidoDto;
-import br.com.fiap.pedidos.api.model.PedidoProcessaDto;
+import br.com.fiap.pedidos.api.exceptionhandler.ProdutoNaoEncontradoException;
+import br.com.fiap.pedidos.api.model.*;
 import br.com.fiap.pedidos.config.MessageConfig;
 import br.com.fiap.pedidos.domain.enums.Status;
 import br.com.fiap.pedidos.domain.exception.PedidoNaoEncontradoException;
-import br.com.fiap.pedidos.api.model.MensagemEmailDto;
+import br.com.fiap.pedidos.api.exceptionhandler.ProdutoNaoPossuiEstoqueException;
 import br.com.fiap.pedidos.domain.model.Pedido;
 import br.com.fiap.pedidos.domain.repository.PedidoRepository;
 import lombok.AllArgsConstructor;
@@ -31,6 +30,8 @@ public class PedidoService {
     private final SQSService sqsService;
 
     private final ClienteService clienteService;
+
+    private final ProdutoService produtoService;
 
     private void enviarEmailPedidoRecebido(Pedido pedido, ClienteDto cliente) {
         var mensagemEmailDto = new MensagemEmailDto();
@@ -63,14 +64,30 @@ public class PedidoService {
     public PedidoDto add(PedidoDto pedidoDto) {
         var pedido = modelMapper.map(pedidoDto, Pedido.class);
 
-        ClienteDto clienteDto = clienteService.getClienteById(pedido.getIdCliente());
+        Optional<ClienteDto> clienteDto = clienteService.getClienteById(pedido.getIdCliente());
 
-        if(clienteDto == null) {
+        if(clienteDto.isEmpty()) {
             throw new ClienteNaoEncontradoException(messageConfig.getClienteNaoEncontrado());
         }
 
+        pedido.getPedidoProdutos()
+                .forEach(pedidoProduto -> {
+                    Optional<ProdutoDto> produtoDto = produtoService.getProdutoById(pedidoProduto.getId().getIdProduto());
+                    if(produtoDto.isPresent()){
+                        ProdutoDto produto = produtoDto.get();
+                        if(produto.getEstoque() >= pedidoProduto.getQuantidade()) {
+                            pedidoProduto.setDescricao(produto.getDescricao());
+                            pedidoProduto.setPreco(produto.getPreco());
+                        } else {
+                            throw new ProdutoNaoPossuiEstoqueException(messageConfig.getProdutoNaoPossuiEstoque() + produto);
+                        }
+                    } else {
+                        throw new ProdutoNaoEncontradoException(messageConfig.getProdutoNaoEncontrado() + pedidoProduto.getId().getIdProduto());
+                    }
+                });
+
         pedido = pedidoRepository.save(pedido);
-        processarPedido(pedido, clienteDto);
+        processarPedido(pedido, clienteDto.get());
 
         return modelMapper.map(pedido, PedidoDto.class);
     }

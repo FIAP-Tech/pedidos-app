@@ -1,7 +1,7 @@
 package br.com.fiap.pedidos.api.client;
 
-import br.com.fiap.pedidos.api.model.ClienteDto;
-import br.com.fiap.pedidos.config.properties.ClienteProperties;
+import br.com.fiap.pedidos.api.model.ProdutoDto;
+import br.com.fiap.pedidos.config.properties.ProdutoProperties;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,11 +15,11 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class ClienteClient {
+public class ProdutoClient {
 
     private WebClient webClient;
 
-    private final ClienteProperties prop;
+    private final ProdutoProperties prop;
 
     @PostConstruct
     private void init() {
@@ -28,16 +28,16 @@ public class ClienteClient {
                 .build();
     }
 
-    public Mono<Optional<ClienteDto>> getClienteById(Long clienteId) {
+    public Mono<Optional<ProdutoDto>> getProdutoById(Long produtoId) {
         return this.webClient.get()
-                .uri("/{id}", clienteId)
+                .uri("/{id}", produtoId)
                 .retrieve()
-                .bodyToMono(ClienteDto.class)
+                .bodyToMono(ProdutoDto.class)
                 .map(Optional::of)
                 .retryWhen(Retry.fixedDelay(prop.getMaxTentativas(), Duration.ofSeconds(prop.getDuracao()))
                         .filter(WebClientResponseException.class::isInstance)
                         .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> retrySignal.failure()))
                 .onErrorResume(WebClientResponseException.NotFound.class, ex -> Mono.just(Optional.empty()))
-                .onErrorResume(WebClientResponseException.class, ex -> Mono.error(new RuntimeException("Erro ao se comunicar com a API de clientes: " + ex.getMessage())));
+                .onErrorResume(WebClientResponseException.class, ex -> Mono.error(new RuntimeException("Erro ao se comunicar com a API de produtos: " + ex.getMessage())));
     }
 }

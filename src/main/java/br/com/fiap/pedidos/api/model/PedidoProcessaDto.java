@@ -30,5 +30,5 @@ public class PedidoProcessaDto {
 
     private String validadeFormaPagamentoCartao;
 
-    private List<PedidoProdutoDto> pedidoProdutos;
+    private List<PedidoProdutoSQSDto> pedidoProdutos;
 }

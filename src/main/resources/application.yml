@@ -27,6 +27,11 @@ api:
         retry:
             max-tentativas: 3
             duracao: 5
+    produto:
+        endpoint: ${API_CLIENTE_ENDPOINT:http://localhost:8080/api/produtos}
+        retry:
+            max-tentativas: 3
+            duracao: 5
 
 
 aws:
@@ -43,3 +48,5 @@ messages:
     error:
         pedido-nao-encontrado: "Pedido não foi encontrado"
         cliente-nao-encontrado: "Cliente não foi encontrado"
+        produto-nao-possui-estoque: "Produto não possui estoque: "
+        produto-nao-encontrado: "Produto não foi encontrado id: "

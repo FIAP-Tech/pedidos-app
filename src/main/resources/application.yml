@@ -21,6 +21,17 @@ spring:
         generate-ddl: false  # Generate DDL from entity models (optional, for schema creation)
         open-in-view: false  # Disable Open Session in View (OSIV) to prevent lazy loading issues
 
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:9000
+                    jwk-set-uri: http://localhost:9000/oauth2/jwks
+
+logging:
+    level:
+        org.springframework.security: TRACE
+
 api:
     cliente:
         endpoint: ${API_CLIENTE_ENDPOINT:http://localhost:8082/api/clientes}
